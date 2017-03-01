@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Configuration
+@using System.Security.Claims;
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -25,11 +27,26 @@
                     <li>@Html.ActionLink("Dashboard", "Index", "Home")</li>
                     <li>@Html.ActionLink("Shift", "Index", "Shift")</li>
                     <li>@Html.ActionLink("Staff", "Index", "Staff")</li>
-                    <li>@Html.ActionLink("Role", "Index", "Roles")</li>
-                    <li>@Html.ActionLink("Job", "Index", "Jobs")</li>
+
+                    @if (@ClaimsPrincipal.Current.Claims.Any())
+                    {
+                        <li>@Html.ActionLink("Role", "Index", "Roles")</li>
+                        <li>@Html.ActionLink("Job", "Index", "Jobs")</li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav navbar-right">@Html.ActionLink("Login", "Index", "Login")</li>
+                    
+                    
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <p>Welcome, @ViewBag.Name!</p>
+                        <p><a href="/Home/Logout" class="btn btn-primary btn-lg">Logout</a></p>
+                    }
+                    else
+                    {
+                        <p><a href="#" class="btn btn-primary" onclick="window.signin();">Login with Auth0</a></p>
+                    }
+                   @* <li class="nav navbar-right">@Html.ActionLink("Login", "Index", "Login")</li>*@
                     @*   <li>@Html.ActionLink("Logout", "Contact", "Home")</li>*@
                 </ul>
             </div>
@@ -43,6 +60,26 @@
         <p>&copy; @DateTime.Now.Year - iScholarship,Inc. All Rights Reserved.</p>
         <p>Hyungoo | Romelyn | Kishor | Minh | FeiFei | Saifal | Mickey</p>
     </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
+    <script type="text/javascript">
+        var lock = new Auth0Lock('@ConfigurationManager.AppSettings["auth0:ClientId"]', '@ConfigurationManager.AppSettings["auth0:Domain"]', {
+            auth: {
+                redirectUrl: 'http://localhost:64308/LoginCallback.ashx'
+              , responseType: 'code'
+              , params: {
+                  scope: 'openid profile'
+              }
+            }
+        });
+
+
+      function signin() {
+        lock.show();
+      }
+    </script>
 </body>
 </html>

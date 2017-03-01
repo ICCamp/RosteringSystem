@@ -3,7 +3,9 @@ using RosteringSystem.Data.Models;
 using RosteringSystem.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Services;
 using System.Linq;
+using System.Security.Claims;
 using System.Web.Mvc;
 
 namespace RosteringSystem.Controllers
@@ -17,6 +19,11 @@ namespace RosteringSystem.Controllers
                 AvailShiftList = Repository.AvailShiftList(),
                 StaffList = Repository.StaffList()
             };
+
+            var nameClaim = ClaimsPrincipal.Current.FindFirst("name");
+
+            if (nameClaim != null && !string.IsNullOrEmpty(nameClaim.Value))
+                ViewBag.Name = nameClaim.Value;
             return View(dashboard);
         }
 
@@ -108,6 +115,13 @@ namespace RosteringSystem.Controllers
         private bool isTimeBetweenStartAndEndTime(DateTime start, DateTime end, DateTime required)
         {
             return required > start && required < end;
+        }
+
+        public ActionResult Logout()
+        {
+            FederatedAuthentication.SessionAuthenticationModule.SignOut();
+
+            return RedirectToAction("Index");
         }
     }
 }
