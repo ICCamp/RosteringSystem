@@ -1,0 +1,69 @@
+<add name="SchoolEntities" connectionString="metadata=res://*/SchoolDataModel.csdl|res://*/SchoolDataModel.ssdl|res://*/SchoolDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=WIN-N9A31SFPQCT\SQLEXPRESS;initial catalog=School;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+    <add name="SchoolDatabase" connectionString="data source=WIN-N9A31SFPQCT\SQLEXPRESS;initial catalog=School;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework" providerName="System.Data.SqlClient" />
+
+Use University
+
+CREATE TABLE Person
+(
+PersonID int PRIMARY KEY,
+LastName varchar(255),
+FirstName varchar(255),
+HireDate Date,
+EnrollmentDate Date
+);
+
+CREATE TABLE Department
+(
+DepartmentID int PRIMARY KEY,
+Name varchar(255),
+Budget decimal,
+StartDate date,
+Administrator varchar(255)
+);
+
+CREATE TABLE Course
+(
+CourseID int PRIMARY KEY,
+Title varchar(255),
+Credits int,
+DepartmentID int FOREIGN KEY REFERENCES Department(DepartmentID)
+);
+
+CREATE TABLE OnlineCourse
+(
+CourseID int FOREIGN KEY REFERENCES Course(CourseID),
+URL varchar(255)
+PRIMARY KEY(CourseID)
+);
+
+CREATE TABLE OnsiteCourse
+(
+CourseID int FOREIGN KEY REFERENCES Course(CourseID),
+Location varchar(255),
+Days varchar(255),
+Time Time,
+PRIMARY KEY(CourseID)
+);
+
+CREATE TABLE CourseInstructor
+(
+CourseID int FOREIGN KEY REFERENCES Course(CourseID),
+PersonID int FOREIGN KEY REFERENCES Person(PersonID),
+PRIMARY KEY(CourseID, PersonID)
+);
+
+CREATE TABLE OfficeAssignment
+(
+InstructorID int FOREIGN KEY REFERENCES Person(PersonID),
+Location varchar(255),
+Timestamp timestamp
+PRIMARY KEY(InstructorID)
+);
+
+CREATE TABLE StudentGrade
+(
+EnrollmentID int IDENTITY(1,1) PRIMARY KEY,
+CourseID int FOREIGN KEY REFERENCES Course(CourseID),
+StudentID int FOREIGN KEY REFERENCES Person(PersonID),
+Grade decimal
+);
