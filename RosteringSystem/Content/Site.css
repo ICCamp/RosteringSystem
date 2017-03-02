@@ -22,3 +22,32 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.form-update {
+    position: fixed;
+    top: -500px;
+    left: 40%;
+    margin: 40px;
+    background-color: #e8e8e8;
+}
+
+#table-update {
+    margin: 50px;
+}
+
+    #table-update tr td {
+        padding: 15px;
+    }
+
+footer {
+    padding-top:20px;
+    background-color:dodgerblue;
+    height:100px;
+    color:white;
+}
+
+.navbar {
+    background-color:dodgerblue;
+    color:white;
+    border:none;
+}

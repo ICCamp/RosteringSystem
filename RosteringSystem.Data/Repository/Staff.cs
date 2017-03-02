@@ -1,4 +1,5 @@
 ﻿using RosteringSystem.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,5 +39,16 @@ namespace RosteringSystem.Data
         {
             return _context.Staff.Find(id);
         }
+
+        public List<Staff> GetAvailStaffListForShift(int shiftId)
+        {
+            var found = _context.Shifts.Find(shiftId);
+            if (found == null) throw new NullReferenceException();
+
+            return _context.Staff.Include("StaffShifts").Where(s => s.RoleId == found.RoleId).ToList();
+        }
+
+
+
     }
 }
