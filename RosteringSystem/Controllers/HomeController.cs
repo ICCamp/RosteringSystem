@@ -10,6 +10,11 @@ namespace RosteringSystem.Controllers
 {
     public class HomeController : BaseController
     {
+        public ActionResult About()
+        {
+            return View();
+        }
+
         public ActionResult Index()
         {
             var dashboard = new DashboardViewModel
